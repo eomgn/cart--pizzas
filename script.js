@@ -1,3 +1,6 @@
+const $decrementModal = document.querySelector('.pizzaInfo--qtmenos')
+const $incrementModal = document.querySelector('.pizzaInfo--qtmais')
+
 let Qtd = 1
 let modalKey
 let cart = []
@@ -19,7 +22,7 @@ pizzaJson.map((item, index) => {
   // descrição das pizzas
   pizzaItem.querySelector('.pizza-item--desc').innerHTML = item.description
 
-  pizzaItem.querySelector('a').addEventListener('click', e => {
+  pizzaItem.querySelector('a').addEventListener('click', (e) => {
     // variaveis
     let modal = document.querySelector('.pizzaWindowArea')
 
@@ -39,13 +42,9 @@ pizzaJson.map((item, index) => {
       modal.style.opacity = '1'
     })
 
-    // imagem das pizzas no modal
     document.querySelector('.pizzaBig img').src = item.img
-    // nome das pizzas no modal
     document.querySelector('.pizzaInfo h1').innerHTML = item.name
-    // descrição das pizzas no modal
     document.querySelector('.pizzaInfo--desc').innerHTML = item.description
-    // preço das pizzas no modal
     document.querySelector(
       '.pizzaInfo--actualPrice'
     ).innerHTML = `R$ ${item.price.toFixed(2)}`
@@ -79,7 +78,7 @@ pizzaJson.map((item, index) => {
 /* eventos de click ------- MODAL -------*/
 
 // adicionando selected ao clicar em algum tamanho
-document.querySelectorAll('.pizzaInfo--size').forEach(size => {
+document.querySelectorAll('.pizzaInfo--size').forEach((size) => {
   size.addEventListener('click', () => {
     document
       .querySelector('.pizzaInfo--size.selected')
@@ -89,23 +88,19 @@ document.querySelectorAll('.pizzaInfo--size').forEach(size => {
   })
 })
 
-// DECREMENTAR ao clicar no sinal de MENOS
-document.querySelector('.pizzaInfo--qtmenos').addEventListener('click', () => {
+function decrementModal() {
   if (Qtd > 1) {
     Qtd--
   }
   document.querySelector('.pizzaInfo--qt').innerHTML = Qtd
-})
+}
 
-// INCREMENTAR ao clicar no sinal de MAIS
-document.querySelector('.pizzaInfo--qtmais').addEventListener('click', () => {
+function incrementModal() {
   Qtd++
   document.querySelector('.pizzaInfo--qt').innerHTML = Qtd
-})
+}
 
-// fechar modal ao clicar em Adicionar ao Carinho
 function closeModal() {
-  // fechando modal ao clicar no botão CANCELAR
   document
     .querySelector('.pizzaInfo--cancelButton')
     .addEventListener('click', () => {
@@ -116,8 +111,7 @@ function closeModal() {
       }, 1000)
     })
 
-  // fechando o modal com a tecla ESC
-  window.addEventListener('keyup', event => {
+  window.addEventListener('keyup', (event) => {
     event.key === 'Escape'
       ? (document.querySelector('.pizzaWindowArea').style.display = 'none')
       : ''
@@ -154,5 +148,26 @@ document
       document.querySelector('aside').classList.add('show')
     }
 
+    cartUpdate()
     closeModal()
   })
+
+function cartUpdate() {
+  for (let i in cart) {
+    let pizzaItem = pizzaJson.find((item) => {
+      return item.id == cart[i].id
+    })
+
+    let cartShop = document.querySelector('.cart')
+    let cartItem = document.querySelector('.models .cart--item').cloneNode(true)
+
+    cartItem.querySelector('img').src = pizzaItem.img
+
+    cartShop.append(cartItem)
+  }
+}
+
+console.log(cart)
+
+$decrementModal.addEventListener('click', decrementModal)
+$incrementModal.addEventListener('click', incrementModal)
